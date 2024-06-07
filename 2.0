@@ -1,0 +1,878 @@
+#include <Servo.h>
+#include <ThomasLib.h>
+#include  <LedControl.h>
+
+
+int DIN = 45;
+int CS = 44;
+int CLK = 42;
+
+byte L[8]= {0x18, 0x3c, 0x7e, 0xff, 0xff, 0x3c, 0x3c, 0x3c};
+byte R[8]= {0x18, 0x1c, 0xfe, 0xff, 0xff, 0xfe, 0x1c, 0x18};
+byte V[8]= {0x18, 0x38, 0x7f, 0xff, 0xff, 0x7f, 0x38, 0x18};
+LedControl lc=LedControl(DIN, CLK, CS, 0);
+// Define the servo pin
+const int servoPin = 9; // You can use any digital pin
+
+const int irSensorPinLinks = 30;
+const int irSensorPinRechts = 28;
+
+Servo servo; // Create a servo object
+const int trigPin = 22;// sensor met servo
+const int echoPin = 23;// sensor met servo
+const int trigPin1 = 24;// rechter sensor
+const int echoPin1 = 25;// rechter sensor
+const int trigPin2 = 26;// linker sensor
+const int echoPin2 = 27;// linker sensor
+const int thresholdDistance = 10; // Adjust as needed
+const int thresholdDistance1 = 25;
+TH_DCMotor motor1(1);
+TH_DCMotor motor2(2);
+TH_DCMotor motor3(3);
+TH_DCMotor motor4(4);
+
+void setup() {
+
+
+  lc.shutdown(0, false);
+  lc.setIntensity(0, 15);
+  lc.clearDisplay(0);
+    // Attach the servo to the pin
+ servo.attach(servoPin);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(trigPin1, OUTPUT);
+  pinMode(echoPin1, INPUT);
+  pinMode(trigPin2, OUTPUT);
+  pinMode(echoPin2, INPUT);
+
+ 
+
+
+void IrLinks() 
+{
+  pinMode(irSensorPinLinks, INPUT); // Stel de IR-sensorpin in als invoer
+  Serial.begin(9600);          // Start de seriële communicatie met baudsnelheid 9600
+}
+void IrRechts() {
+  pinMode(irSensorPinRechts, INPUT); // Stel de IR-sensorpin in als invoer
+  Serial.begin(9600);          // Start de seriële communicatie met baudsnelheid 9600
+}
+
+void achter()
+{
+  motor1.run(TERUG);
+  motor2.run(TERUG);
+  motor3.run(TERUG);
+  motor4.run(TERUG);
+
+    motor1.setSpeed(100); 
+    motor2.setSpeed(100);     
+    motor3.setSpeed(70);
+    motor4.setSpeed(70);  
+ 
+
+   // motor1.setSpeed(0);  
+   // motor2.setSpeed(0);
+   // motor3.setSpeed(0);
+    //motor4.setSpeed(0);
+ delay(100);
+}
+
+void voor()
+{
+  motor1.run(VOOR);
+  motor2.run(VOOR);
+  motor3.run(VOOR);
+  motor4.run(VOOR);
+
+    motor1.setSpeed(50); 
+    motor2.setSpeed(120);     
+    motor3.setSpeed(50);
+    motor4.setSpeed(90);  
+ 
+   //hoelang moet hij draaien...?? 
+ delay(50);
+}
+
+void Links_faze()
+{
+  motor1.run(VOOR);
+  motor2.run(TERUG);
+  motor3.run(TERUG);
+  motor4.run(VOOR);
+for (int i=0; i<255; i++) 
+ {
+    motor1.setSpeed(190); 
+    motor2.setSpeed(200);     
+    motor3.setSpeed(200);
+    motor4.setSpeed(180);  
+ }
+   delay(150);//hoelang doorijden (2s)
+for (int i=255; i!=0; i--) 
+ {
+    motor1.setSpeed(i);  
+    motor2.setSpeed(i);
+    motor3.setSpeed(i);
+    motor4.setSpeed(i);
+ }
+}
+
+
+void Rechts_faze()
+{
+  motor1.run(VOOR);
+  motor2.run(TERUG);
+  motor3.run(TERUG);
+  motor4.run(VOOR);
+for (int i=0; i<255; i++) 
+ {
+    motor1.setSpeed(250); 
+    motor2.setSpeed(200);     
+    motor3.setSpeed(200);
+    motor4.setSpeed(200);  
+ }
+   delay(100);//hoelang doorijden (2s)
+for (int i=255; i!=0; i--) 
+ {
+    motor1.setSpeed(i);  
+    motor2.setSpeed(i);
+    motor3.setSpeed(i);
+    motor4.setSpeed(i);
+ }
+}
+
+
+void links()
+{
+  motor1.run(VOOR);
+  motor2.run(VOOR);
+  motor3.run(TERUG);
+  motor4.run(TERUG);
+
+    motor1.setSpeed(125); 
+    motor2.setSpeed(100);     
+    motor3.setSpeed(125);
+    motor4.setSpeed(65);  
+ 
+   delay(400);//hoelang moet hij draaien...?? 
+for (int i=255; i!=0; i--) 
+ {
+    motor1.setSpeed(i);  
+    motor2.setSpeed(i);
+    motor3.setSpeed(i);
+    motor4.setSpeed(i);
+ }
+}
+void tikje_links()
+{
+  motor1.run(VOOR);
+  motor2.run(VOOR);
+  motor3.run(TERUG);
+  motor4.run(TERUG);
+
+    motor1.setSpeed(125); 
+    motor2.setSpeed(100);     
+    motor3.setSpeed(125);
+    motor4.setSpeed(65);  
+ 
+   delay(150);//hoelang moet hij draaien...?? 
+for (int i=255; i!=0; i--) 
+ {
+    motor1.setSpeed(i);  
+    motor2.setSpeed(i);
+    motor3.setSpeed(i);
+    motor4.setSpeed(i);
+ }
+}
+
+
+void rechts()
+{
+motor1.run(TERUG);
+motor2.run(TERUG);
+motor3.run(VOOR);
+motor4.run(VOOR);
+
+    motor1.setSpeed(40);
+    motor2.setSpeed(125);  
+    motor3.setSpeed(75); 
+    motor4.setSpeed(125); 
+    
+ 
+    delay(450);//hoelang moet hij draaien...??
+for (int i=255; i!=0; i--) 
+ {
+    motor1.setSpeed(i);  
+    motor2.setSpeed(i);
+    motor3.setSpeed(i);
+    motor4.setSpeed(i);
+ }
+}
+void tikje_rechts()
+{
+motor1.run(TERUG);
+motor2.run(TERUG);
+motor3.run(VOOR);
+motor4.run(VOOR);
+
+    motor1.setSpeed(40);
+    motor2.setSpeed(125);  
+    motor3.setSpeed(75); 
+    motor4.setSpeed(125); 
+    
+ 
+    delay(150);//hoelang moet hij draaien...??
+for (int i=255; i!=0; i--) 
+ {
+    motor1.setSpeed(i);  
+    motor2.setSpeed(i);
+    motor3.setSpeed(i);
+    motor4.setSpeed(i);
+ }
+}
+
+
+void Draaien()
+{
+motor1.run(TERUG);
+motor2.run(TERUG);
+motor3.run(VOOR);
+motor4.run(VOOR);
+for (int i=0; i<255; i++) 
+ {
+    motor1.setSpeed(200);
+    motor2.setSpeed(200);  
+    motor3.setSpeed(200); 
+    motor4.setSpeed(200); 
+    
+ }
+    delay(950);//hoelang moet hij draaien...?? delay(2xlinks);
+for (int i=255; i!=0; i--) 
+ {
+    motor1.setSpeed(i);  
+    motor2.setSpeed(i);
+    motor3.setSpeed(i);
+    motor4.setSpeed(i);
+ }
+}
+void Geluid_voor()
+{
+digitalWrite(trigPin, LOW);
+    delay(2);
+    digitalWrite(trigPin, HIGH);
+    delay(10);
+    digitalWrite(trigPin, LOW);
+}
+void Geluid_rechts()
+{
+  digitalWrite(trigPin1, LOW);
+    delay(2);
+    digitalWrite(trigPin1, HIGH);
+    delay(10);
+    digitalWrite(trigPin1, LOW);
+}
+void Geluid_links()
+{
+  digitalWrite(trigPin2, LOW);
+    delay(2);
+    digitalWrite(trigPin2, HIGH);
+    delay(10);
+    digitalWrite(trigPin2, LOW);
+}
+
+void printByte(byte character [])
+{
+  int i = 0;
+  for(i=0;i<9;i++)
+  {
+    lc.setRow(0, i, character[i]);
+  }
+}
+
+
+
+/////////////////////////////////////////////////////////////////MAIN CODE//////////////////////////////////////////////////////////////////////////////////////////////////
+void loop() 
+{
+  void IrLinks();
+  void IrRechts();
+  long /*Middel:*/duration, distance, /*rechter sensor*/duration1, distance1,/*linker sensor*/ duration2, distance2;
+  Geluid_voor();
+      duration = pulseIn(echoPin, HIGH);
+      distance = duration * 0.034 / 2;
+      Serial.println(distance);
+
+      Geluid_rechts();
+     duration1 = pulseIn(echoPin1, HIGH);
+     distance1 = duration1 * 0.034 / 2;
+     Serial.println(distance1);
+
+      Geluid_links();
+      duration2 = pulseIn(echoPin2, HIGH);
+      distance2 = duration2 * 0.034 / 2;
+      Serial.println(distance2);
+
+ int sensorValueLinks = digitalRead(irSensorPinLinks);
+    if (sensorValueLinks == LOW) {
+    tikje_rechts();
+  } else {
+    Serial.println("Geen obstakel");
+  }
+  delay(50);
+
+int sensorValueRechts = digitalRead(irSensorPinRechts);
+    if (sensorValueRechts == LOW) {
+    tikje_links();
+  } else {
+    Serial.println("Geen obstakel");
+  }
+  delay(50);
+
+  if (distance1 <= 3)
+    {Links_faze();}
+   if (distance2 <= 3)
+    {Rechts_faze();}
+  
+while(distance1 < thresholdDistance1 && distance > thresholdDistance)
+{
+   printByte(L);
+    voor();
+    Geluid_voor();
+    duration = pulseIn(echoPin, HIGH);
+    distance = duration * 0.034 / 2;
+    Serial.println(distance);
+    Geluid_links();
+    duration2 = pulseIn(echoPin2, HIGH);
+    distance2 = duration2 * 0.034 / 2;
+    Serial.println(distance2);
+    Geluid_rechts();
+    duration1 = pulseIn(echoPin1, HIGH);
+    distance1 = duration1 * 0.034 / 2;
+    Serial.println(distance1);
+
+    int sensorValueLinks = digitalRead(irSensorPinLinks);
+    if (sensorValueLinks == LOW) {
+    tikje_rechts();
+  } else {
+    Serial.println("Geen obstakel");
+  }
+  delay(50);
+
+int sensorValueRechts = digitalRead(irSensorPinRechts);
+    if (sensorValueRechts == LOW) {
+    tikje_links();
+  } else {
+    Serial.println("Geen obstakel");
+  }
+  delay(50);
+
+  if (distance1 <= 3)
+    {Links_faze();}
+   if (distance2 <= 3)
+    {Rechts_faze();}
+}
+    motor1.setSpeed(0);  
+    motor2.setSpeed(0);
+    motor3.setSpeed(0);
+    motor4.setSpeed(0);
+    while (distance1 > thresholdDistance1)
+    {
+      voor();
+      delay(100);
+      printByte(R);
+      rechts();
+      Links_faze();
+     rechts();
+      printByte(L);
+      
+      Geluid_voor();
+      duration = pulseIn(echoPin, HIGH);
+      distance = duration * 0.034 / 2;
+      Serial.println(distance);
+
+      Geluid_rechts();
+     duration1 = pulseIn(echoPin1, HIGH);
+     distance1 = duration1 * 0.034 / 2;
+     Serial.println(distance1);
+
+      Geluid_links();
+      duration2 = pulseIn(echoPin2, HIGH);
+      distance2 = duration2 * 0.034 / 2;
+      Serial.println(distance2);
+    
+
+        if (distance1 <= 3)
+        {Links_faze();}
+        if (distance2 <= 3)
+        {Rechts_faze();}
+       int sensorValueLinks = digitalRead(irSensorPinLinks);
+        if (sensorValueLinks == LOW) {
+        tikje_rechts();}
+        delay(50);
+        int sensorValueRechts = digitalRead(irSensorPinRechts);
+        if (sensorValueRechts == LOW) {
+        tikje_links();
+         }
+         voor();
+         delay(500);
+         Geluid_voor();
+          duration = pulseIn(echoPin, HIGH);
+          distance = duration * 0.034 / 2;
+          Serial.println(distance);
+
+          Geluid_rechts();
+          duration1 = pulseIn(echoPin1, HIGH);
+          distance1 = duration1 * 0.034 / 2;
+          Serial.println(distance1);
+
+          Geluid_links();
+          duration2 = pulseIn(echoPin2, HIGH);
+          distance2 = duration2 * 0.034 / 2;
+          Serial.println(distance2);
+    
+
+          if (distance1 <= 3)
+          {Links_faze();}
+          if (distance2 <= 3)
+          {Rechts_faze();}
+          sensorValueLinks = digitalRead(irSensorPinLinks);
+          if (sensorValueLinks == LOW) {
+          tikje_rechts();}
+          delay(50);
+          sensorValueRechts = digitalRead(irSensorPinRechts);
+          if (sensorValueRechts == LOW) {
+          tikje_links();
+          }
+          voor();
+          delay(200);
+          motor1.setSpeed(0);  
+          motor2.setSpeed(0);
+          motor3.setSpeed(0);
+          motor4.setSpeed(0);
+          Geluid_voor();
+          duration = pulseIn(echoPin, HIGH);
+          distance = duration * 0.034 / 2;
+          Serial.println(distance);
+
+          Geluid_rechts();
+          duration1 = pulseIn(echoPin1, HIGH);
+          distance1 = duration1 * 0.034 / 2;
+          Serial.println(distance1);
+
+          Geluid_links();
+          duration2 = pulseIn(echoPin2, HIGH);
+          distance2 = duration2 * 0.034 / 2;
+          Serial.println(distance2);
+       }
+
+       while(distance1 < thresholdDistance1 && distance < thresholdDistance && distance2 > thresholdDistance1)
+       {
+        printByte(V);
+        links();
+        Rechts_faze();
+        links();
+        printByte(L);
+        Geluid_voor();
+        duration = pulseIn(echoPin, HIGH);
+        distance = duration * 0.034 / 2;
+        Serial.println(distance);
+
+        Geluid_rechts();
+        duration1 = pulseIn(echoPin1, HIGH);
+        distance1 = duration1 * 0.034 / 2;
+        Serial.println(distance1);
+
+        Geluid_links();
+        duration2 = pulseIn(echoPin2, HIGH);
+        distance2 = duration2 * 0.034 / 2;
+        Serial.println(distance2);
+
+        int sensorValueLinks = digitalRead(irSensorPinLinks);
+        if (sensorValueLinks == LOW) {
+        tikje_rechts();}
+        delay(50);
+        int sensorValueRechts = digitalRead(irSensorPinRechts);
+        if (sensorValueRechts == LOW) {
+        tikje_links();
+        delay(50);}
+        if (distance1 <= 3)
+       {Links_faze();}
+       if (distance2 <= 3)
+       {Rechts_faze();}
+
+       Geluid_voor();
+        duration = pulseIn(echoPin, HIGH);
+        distance = duration * 0.034 / 2;
+        Serial.println(distance);
+
+        Geluid_rechts();
+        duration1 = pulseIn(echoPin1, HIGH);
+        distance1 = duration1 * 0.034 / 2;
+        Serial.println(distance1);
+
+        Geluid_links();
+        duration2 = pulseIn(echoPin2, HIGH);
+        distance2 = duration2 * 0.034 / 2;
+        Serial.println(distance2);
+       }
+        while(distance < thresholdDistance && distance1 < thresholdDistance1 && distance2 < thresholdDistance1)
+        {
+         while(1)
+          {
+            printByte(L); //pijl achter
+            achter();
+            Geluid_voor();
+            duration = pulseIn(echoPin, HIGH);
+            distance = duration * 0.034 / 2;
+            Serial.println(distance);
+            Geluid_links();
+            duration2 = pulseIn(echoPin2, HIGH);
+            distance2 = duration2 * 0.034 / 2;
+            Serial.println(distance2);
+            Geluid_rechts();
+            duration1 = pulseIn(echoPin1, HIGH);
+            distance1 = duration1 * 0.034 / 2;
+            Serial.println(distance1);
+
+            int sensorValueLinks = digitalRead(irSensorPinLinks);
+            if (sensorValueLinks == LOW) {
+            tikje_rechts();
+            } else {
+            Serial.println("Geen obstakel");
+            }
+            delay(50);
+
+           int sensorValueRechts = digitalRead(irSensorPinRechts);
+           if (sensorValueRechts == LOW) {
+           tikje_links();
+           } else {
+           Serial.println("Geen obstakel");
+           }
+           delay(50);
+
+           if (distance1 <= 3)
+           {Links_faze();}
+           if (distance2 <= 3)
+           {Rechts_faze();}
+
+            if(distance1 > thresholdDistance1 && distance2 < thresholdDistance1)
+            {
+              printByte(R);
+              rechts();
+              Links_faze();
+              rechts();
+              printByte(L);
+      
+              Geluid_voor();
+              duration = pulseIn(echoPin, HIGH);
+              distance = duration * 0.034 / 2;
+              Serial.println(distance);
+
+              Geluid_rechts();
+              duration1 = pulseIn(echoPin1, HIGH);
+              distance1 = duration1 * 0.034 / 2;
+              Serial.println(distance1);
+
+              Geluid_links();
+              duration2 = pulseIn(echoPin2, HIGH);
+              distance2 = duration2 * 0.034 / 2;
+              Serial.println(distance2);
+    
+
+              if (distance1 <= 3)
+              {Links_faze();}
+              if (distance2 <= 3)
+              {Rechts_faze();}
+              int sensorValueLinks = digitalRead(irSensorPinLinks);
+              if (sensorValueLinks == LOW) {
+              tikje_rechts();}
+              delay(50);
+              int sensorValueRechts = digitalRead(irSensorPinRechts);
+              if (sensorValueRechts == LOW) {
+              tikje_links();
+             }
+              voor();
+              delay(200);
+              Geluid_voor();
+              duration = pulseIn(echoPin, HIGH);
+              distance = duration * 0.034 / 2;
+              Serial.println(distance);
+
+              Geluid_rechts();
+              duration1 = pulseIn(echoPin1, HIGH);
+              distance1 = duration1 * 0.034 / 2;
+              Serial.println(distance1);
+
+              Geluid_links();
+              duration2 = pulseIn(echoPin2, HIGH);
+              distance2 = duration2 * 0.034 / 2;
+              Serial.println(distance2);
+    
+
+              if (distance1 <= 3)
+              {Links_faze();}
+              if (distance2 <= 3)
+              {Rechts_faze();}
+              sensorValueLinks = digitalRead(irSensorPinLinks);
+              if (sensorValueLinks == LOW) {
+              tikje_rechts();}
+              delay(50);
+              sensorValueRechts = digitalRead(irSensorPinRechts);
+              if (sensorValueRechts == LOW) {
+              tikje_links();
+              }
+              voor();
+              delay(200);
+              motor1.setSpeed(0);  
+              motor2.setSpeed(0);
+              motor3.setSpeed(0);
+              motor4.setSpeed(0);
+              Geluid_voor();
+              duration = pulseIn(echoPin, HIGH);
+              distance = duration * 0.034 / 2;
+              Serial.println(distance);
+
+              Geluid_rechts();
+              duration1 = pulseIn(echoPin1, HIGH);
+              distance1 = duration1 * 0.034 / 2;
+              Serial.println(distance1);
+
+              Geluid_links();
+              duration2 = pulseIn(echoPin2, HIGH);
+              distance2 = duration2 * 0.034 / 2;
+              Serial.println(distance2);
+              break;
+            }
+            if(distance2 > thresholdDistance1)
+            { 
+              printByte(V);
+              links();
+              Rechts_faze();
+              links();
+              links();
+              printByte(L);
+              Geluid_voor();
+              duration = pulseIn(echoPin, HIGH);
+              distance = duration * 0.034 / 2;
+              Serial.println(distance);
+
+              Geluid_rechts();
+              duration1 = pulseIn(echoPin1, HIGH);
+              distance1 = duration1 * 0.034 / 2;
+              Serial.println(distance1);
+
+              Geluid_links();
+              duration2 = pulseIn(echoPin2, HIGH);
+              distance2 = duration2 * 0.034 / 2;
+              Serial.println(distance2);
+
+              int sensorValueLinks = digitalRead(irSensorPinLinks);
+              if (sensorValueLinks == LOW) {
+              tikje_rechts();}
+              delay(50);
+              int sensorValueRechts = digitalRead(irSensorPinRechts);
+              if (sensorValueRechts == LOW) {
+              tikje_links();
+              delay(50);}
+              if (distance1 <= 3)
+              {Links_faze();}
+              if (distance2 <= 3)
+              {Rechts_faze();}
+
+               Geluid_voor();
+              duration = pulseIn(echoPin, HIGH);
+              distance = duration * 0.034 / 2;
+              Serial.println(distance);
+
+              Geluid_rechts();
+              duration1 = pulseIn(echoPin1, HIGH);
+              distance1 = duration1 * 0.034 / 2;
+              Serial.println(distance1);
+
+              Geluid_links();
+              duration2 = pulseIn(echoPin2, HIGH);
+              distance2 = duration2 * 0.034 / 2;
+              Serial.println(distance2);
+
+              voor();
+              delay(500);
+              Geluid_voor();
+              duration = pulseIn(echoPin, HIGH);
+              distance = duration * 0.034 / 2;
+              Serial.println(distance);
+
+              Geluid_rechts();
+              duration1 = pulseIn(echoPin1, HIGH);
+              distance1 = duration1 * 0.034 / 2;
+              Serial.println(distance1);
+
+              Geluid_links();
+              duration2 = pulseIn(echoPin2, HIGH);
+              distance2 = duration2 * 0.034 / 2;
+              Serial.println(distance2);
+    
+
+              if (distance1 <= 3)
+              {Links_faze();}
+              if (distance2 <= 3)
+              {Rechts_faze();}
+              sensorValueLinks = digitalRead(irSensorPinLinks);
+              if (sensorValueLinks == LOW) {
+              tikje_rechts();}
+              delay(50);
+              sensorValueRechts = digitalRead(irSensorPinRechts);
+              if (sensorValueRechts == LOW) {
+              tikje_links();
+              }
+              voor();
+              delay(200);
+              motor1.setSpeed(0);  
+              motor2.setSpeed(0);
+              motor3.setSpeed(0);
+              motor4.setSpeed(0);
+              Geluid_voor();
+              duration = pulseIn(echoPin, HIGH);
+              distance = duration * 0.034 / 2;
+              Serial.println(distance);
+
+              Geluid_rechts();
+              duration1 = pulseIn(echoPin1, HIGH);
+              distance1 = duration1 * 0.034 / 2;
+              Serial.println(distance1);
+
+              Geluid_links();
+              duration2 = pulseIn(echoPin2, HIGH);
+              distance2 = duration2 * 0.034 / 2;
+              Serial.println(distance2);
+              break;
+            }
+          }
+        }
+       }
+
+    }
+    delay(200);
+    printByte(L);
+    servo.write(150);
+    delay(200);
+    Geluid_voor();
+    duration = pulseIn(echoPin, HIGH);                   //sensor voor helemaal naar links
+    distance = duration * 0.034 / 2;
+    Serial.println(distance);
+
+    if (distance <= 15)
+    {
+      printByte(R);
+      tikje_rechts();
+      printByte(L);
+    }
+    delay(200);
+    printByte(L);
+    servo.write(120);
+    delay(200);
+    Geluid_voor();
+    duration = pulseIn(echoPin, HIGH);                    //sensor voor half naar links
+    distance = duration * 0.034 / 2;
+    Serial.println(distance);
+
+    if (distance <= 15)
+    {
+      printByte(R);
+      tikje_rechts();
+      printByte(L);
+    }
+
+    delay(200);
+    servo.write(100);
+    printByte(L);
+  Geluid_links();
+    duration2 = pulseIn(echoPin2, HIGH);                 //sensor voor naar voor
+    distance2 = duration2 * 0.034 / 2;
+    Serial.println(distance2);
+  Geluid_rechts();
+    duration1 = pulseIn(echoPin1, HIGH);
+    distance1 = duration1 * 0.034 / 2;
+    Serial.println(distance1);
+   
+   if (distance1 <= 2)
+    {Links_faze();}
+   if (distance2 <= 2)
+    {Rechts_faze();}
+
+while (distance >= thresholdDistance)                   //naar voor rijden als er ruimte is
+  {
+    printByte(L);
+    voor();
+    Geluid_voor();
+     duration = pulseIn(echoPin, HIGH);
+    distance = duration * 0.034 / 2;
+    Serial.println(distance);
+    Geluid_links();
+    duration2 = pulseIn(echoPin2, HIGH);
+    distance2 = duration2 * 0.034 / 2;
+    Serial.println(distance2);
+    Geluid_rechts();
+    duration1 = pulseIn(echoPin1, HIGH);
+    distance1 = duration1 * 0.034 / 2;
+    Serial.println(distance1);
+
+    if (distance1 <= 2)                             //zijkanten in de gaten houden, te dichtbij = fazen tegengestelde richting
+      {Links_faze();}
+    if (distance2 <= 2)
+      {Rechts_faze();}
+  }
+  for (int i=255; i!=0; i--) 
+ {
+    motor1.setSpeed(i);  
+    motor2.setSpeed(i);
+    motor3.setSpeed(i);
+    motor4.setSpeed(i);
+ }
+
+    while (distance1 < thresholdDistance1 && distance < thresholdDistance)              //voor is te dichtbij dan gaat hij naar links    
+    {
+    printByte(V);
+    links();
+    Rechts_faze();
+    links();
+    printByte(L);
+    Geluid_voor();
+    duration = pulseIn(echoPin, HIGH);
+    distance = duration * 0.034 / 2;
+    Serial.println(distance);
+
+    Geluid_rechts();
+    duration1 = pulseIn(echoPin1, HIGH);
+    distance1 = duration1 * 0.034 / 2;
+    Serial.println(distance1);
+
+    Geluid_links();
+    duration2 = pulseIn(echoPin2, HIGH);
+    distance2 = duration2 * 0.034 / 2;
+    Serial.println(distance2);
+    }
+
+   while (distance1 > thresholdDistance1 && distance < thresholdDistance)       //voor en links is te dichtbij, dan gaat hij naar rechts
+    {
+    printByte(R);
+    rechts();
+    Links_faze();
+    rechts();
+    printByte(L);
+      Geluid_voor();
+      duration = pulseIn(echoPin, HIGH);
+      distance = duration * 0.034 / 2;
+      Serial.println(distance);
+
+      Geluid_rechts();
+     duration1 = pulseIn(echoPin1, HIGH);
+     distance1 = duration1 * 0.034 / 2;
+     Serial.println(distance1);
+
+      Geluid_links();
+      duration2 = pulseIn(echoPin2, HIGH);
+      distance2 = duration2 * 0.034 / 2;
+      Serial.println(distance2);
+    }
+   }
